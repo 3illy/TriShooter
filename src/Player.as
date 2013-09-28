@@ -2,6 +2,7 @@ package
 {
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.utils.Input;
 	import net.flashpunk.utils.Key;
 	/**
@@ -9,22 +10,24 @@ package
 	 * @author Billy Tremaine
 	 */
 	 
-	 //temp another temp
 	public class Player extends Entity
 	{
 		[Embed(source = 'assets/player.png')] private const PLAYER:Class;
+		public var player:Image  = new Image(PLAYER);
 		
 		public var gravity:Number = 5;
 		public var xSpeed:Number = 0;
 		public var ySpeed:Number = 0;
 		public var grounded:Boolean = false;
+		public var rightFacing:Boolean = true;
 		
 		public function Player()
 		{
 			
-			setHitbox(30, 60);
+			graphic = player;
+			player.originX = 15;
 			
-			graphic = new Image(PLAYER);
+			setHitbox(30, 60);
 			
 			Input.define("Jump", Key.W, Key.SPACE);
 			Input.define("Left", Key.A, Key.LEFT);
@@ -38,11 +41,10 @@ package
 		override public function update():void 
 		{
 			//check if the player is grounded
-			if (collide("wall", x, y + 1))
+			if (collide("wall", x, y +1))
 			{
 				grounded = true;
 				y = y;
-				trace ("you hit something");
 			}
 			
 			//let gravity take ove the player's yspeed
@@ -56,12 +58,23 @@ package
 			{
 				trace ("Left");
 				x -= 4;
+				if (rightFacing == true)
+				{
+					rightFacing = false;
+					player.scaleX = -1;
+				}
 			}
 			
 			if (Input.check("Right"))
 			{
 				trace ("Right");
 				x += 4;
+				if (rightFacing == false)
+				{
+					rightFacing = true;
+					player.scaleX = 1;
+				}
+				
 			}
 			
 			if (Input.check("Down"))
@@ -89,6 +102,7 @@ package
 			{
 				trace ("Shoot3");
 			}
+			
 			
 			
 			
