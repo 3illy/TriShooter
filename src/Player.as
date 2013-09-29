@@ -15,11 +15,21 @@ package
 		[Embed(source = 'assets/player.png')] private const PLAYER:Class;
 		public var player:Image  = new Image(PLAYER);
 		
-		public var gravity:Number = 5;
+		public var speed:Number = 4;
+		public var jumpSpeed:Number = 25;
+		public var gravity:Number = 1;
+		public var fallSpeed:Number = 0;
+		public var moving:Boolean = false;
+		public var drag:Number = .85;
+		public var jumpDrag:Number = .90;
 		public var xSpeed:Number = 0;
 		public var ySpeed:Number = 0;
 		public var grounded:Boolean = false;
+		public var canJump:Boolean = false;
+		public var jumping:Boolean = false;
 		public var rightFacing:Boolean = true;
+		public var goingRight:Boolean = false;
+		public var goingLeft:Boolean = false;
 		
 		public function Player()
 		{
@@ -44,35 +54,72 @@ package
 			if (collide("wall", x, y +1))
 			{
 				grounded = true;
+				jumping = false;
+				canJump = true;
+				fallSpeed = gravity;
 				y = y;
 			}
 			
 			//let gravity take ove the player's yspeed
-			else
+			if (!collide("wall", x, y +1) && jumping == false)
 			{
 				grounded = false;
-				y += gravity;
+				
+				if (fallSpeed < 10)
+				{fallSpeed ++;}
+				
+				y += fallSpeed;
 			}
 			
 			if (Input.check("Left"))
 			{
-				trace ("Left");
-				x -= 4;
+				moving = false;
+				goingLeft = true;
+				goingRight = false;
+				x -= speed;
+				xSpeed = speed;
 				if (rightFacing == true)
 				{
 					rightFacing = false;
 					player.scaleX = -1;
 				}
+				
 			}
 			
 			if (Input.check("Right"))
 			{
-				trace ("Right");
-				x += 4;
+				moving = false;
+				goingRight = true;
+				goingLeft = false;
+				x += speed;
+				xSpeed = speed;
 				if (rightFacing == false)
 				{
 					rightFacing = true;
 					player.scaleX = 1;
+				}
+				
+			}
+			//this is where drag is implimented on the player
+			if (Input.released("Left") || Input.released("Right"))
+			{moving = true; }
+			
+			if (moving == true)
+			{
+				xSpeed *= drag;
+				
+				if (goingLeft == true)
+				{x -= xSpeed; }
+				
+				if (goingRight == true)
+				{x += xSpeed;}
+				
+				
+				if (xSpeed < 0.8)
+				{
+					moving = false;
+					goingLeft = false;
+					goingRight = false;
 				}
 				
 			}
@@ -82,10 +129,22 @@ package
 				trace ("Down");
 			}
 			
-			if (Input.check("Jump") && grounded == true)
+			if (Input.check("Jump") && canJump == true)
 			{
-				trace ("Jump");
+				if (grounded == true)
+				{ySpeed = jumpSpeed; }
 				
+				ySpeed *= jumpDrag;
+				y -= ySpeed;
+				jumping = true;
+				grounded = false;
+				
+			}
+			
+			if (Input.released("Jump") || ySpeed < 1.5)
+			{
+			canJump = false;
+			jumping = false; 
 			}
 			
 			if (Input.pressed("Shoot1"))
