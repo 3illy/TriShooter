@@ -45,6 +45,9 @@ package
 			Input.define("Left", Key.A, Key.LEFT);
 			Input.define("Right", Key.D, Key.RIGHT);
 			Input.define("Down", Key.S, Key.DOWN);
+			Input.define("Shoot1", Key.J, Key.C);
+			Input.define("Shoot2", Key.K, Key.X);
+			Input.define("Shoot3", Key.L, Key.Z);
 		}
 		
 		override public function update():void 

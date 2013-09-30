@@ -51,7 +51,6 @@ package
 			}
 			
 			
-			//handles the projectile
 			
 			if (Input.pressed("Shoot1") && canFire == true)
 			{
@@ -76,8 +75,6 @@ package
 				
 				canFire = false;
 			}
-			
-			//here will be the handler to check if the projectile has timed itself out.
 			
 		}
 	}
