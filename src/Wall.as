@@ -11,9 +11,8 @@ package
 		[Embed(source = 'assets/wall.png')] private const WALL:Class;
 		
 		
-		public function Wall(xLoc, yLoc)
+		public function Wall(xLoc:Number, yLoc:Number)
 		{
-			
 			
 			graphic = new Image(WALL);
 			

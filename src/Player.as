@@ -16,7 +16,7 @@ package
 		public var player:Image  = new Image(PLAYER);
 		
 		public var speed:Number = 4;
-		public var jumpSpeed:Number = 25;
+		public var jumpSpeed:Number = 18;
 		public var gravity:Number = 1;
 		public var fallSpeed:Number = 0;
 		public var moving:Boolean = false;
@@ -30,6 +30,8 @@ package
 		public var rightFacing:Boolean = true;
 		public var goingRight:Boolean = false;
 		public var goingLeft:Boolean = false;
+		public var shotOriginX:Number = 0;
+		public var shotOriginY:Number = 0;
 		
 		public function Player()
 		{
@@ -43,9 +45,6 @@ package
 			Input.define("Left", Key.A, Key.LEFT);
 			Input.define("Right", Key.D, Key.RIGHT);
 			Input.define("Down", Key.S, Key.DOWN);
-			Input.define("Shoot1", Key.J, Key.C);
-			Input.define("Shoot2", Key.K, Key.X);
-			Input.define("Shoot3", Key.L, Key.Z);
 		}
 		
 		override public function update():void 
@@ -65,8 +64,8 @@ package
 			{
 				grounded = false;
 				
-				if (fallSpeed < 10)
-				{fallSpeed ++;}
+				if (fallSpeed < 8)
+				{fallSpeed += .5;}
 				
 				y += fallSpeed;
 			}
@@ -147,20 +146,10 @@ package
 			jumping = false; 
 			}
 			
-			if (Input.pressed("Shoot1"))
-			{
-				trace ("Shoot1");
-			}
+			//sets the shot origin to the correcto location
+			shotOriginX = x + 15;
+			shotOriginY = y + 15;
 			
-			if (Input.pressed("Shoot2"))
-			{
-				trace ("Shoot2");
-			}
-			
-			if (Input.pressed("Shoot3"))
-			{
-				trace ("Shoot3");
-			}
 			
 			
 			
