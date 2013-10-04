@@ -1,5 +1,6 @@
 package 
 {
+	import net.flashpunk.FP;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.graphics.Spritemap;
@@ -12,11 +13,11 @@ package
 	 
 	public class Player extends Entity
 	{
-		[Embed(source = 'assets/player.png')] private const PLAYER:Class;
-		public var player:Image  = new Image(PLAYER);
+		[Embed(source = 'assets/SPRITESHEET_PLAYER.png')] private const PLAYER:Class;
+		public var player:Spritemap  = new Spritemap(PLAYER, 32, 32);
 		
 		public var speed:Number = 4;
-		public var jumpSpeed:Number = 18;
+		public var jumpSpeed:Number = 8;
 		public var gravity:Number = 1;
 		public var fallSpeed:Number = 0;
 		public var moving:Boolean = false;
@@ -24,6 +25,8 @@ package
 		public var jumpDrag:Number = .90;
 		public var xSpeed:Number = 0;
 		public var ySpeed:Number = 0;
+		public var xPos:Number = 0;
+		public var yPos:Number = 0;
 		public var grounded:Boolean = false;
 		public var canJump:Boolean = false;
 		public var jumping:Boolean = false;
@@ -36,10 +39,17 @@ package
 		public function Player()
 		{
 			
+			
+			
+			player.add("stand", [0, 1], 2, true);
+			player.add("walk", [2, 3, 4, 5, 6, 7], 12, true);
+			
 			graphic = player;
 			player.originX = 15;
 			
-			setHitbox(30, 60);
+			x = 25
+			
+			setHitbox(18, 32);
 			
 			Input.define("Jump", Key.W, Key.SPACE);
 			Input.define("Left", Key.A, Key.LEFT);
@@ -53,7 +63,7 @@ package
 		override public function update():void 
 		{
 			//check if the player is grounded
-			if (collide("wall", x, y +1))
+			if (collide("wall", x, y))
 			{
 				grounded = true;
 				jumping = false;
@@ -67,8 +77,8 @@ package
 			{
 				grounded = false;
 				
-				if (fallSpeed < 8)
-				{fallSpeed += .5;}
+				if (fallSpeed < 6)
+				{fallSpeed += .3;}
 				
 				y += fallSpeed;
 			}
@@ -80,6 +90,7 @@ package
 				goingRight = false;
 				x -= speed;
 				xSpeed = speed;
+				player.play("walk");
 				if (rightFacing == true)
 				{
 					rightFacing = false;
@@ -95,6 +106,7 @@ package
 				goingLeft = false;
 				x += speed;
 				xSpeed = speed;
+				player.play("walk");
 				if (rightFacing == false)
 				{
 					rightFacing = true;
@@ -150,8 +162,30 @@ package
 			}
 			
 			//sets the shot origin to the correcto location
-			shotOriginX = x + 15;
-			shotOriginY = y + 15;
+			shotOriginX = x + 8;
+			shotOriginY = y + 16;
+			
+			if (Input.pressed("Shoot1"))
+			{
+				FP.world.add(new Projectile("projectile1", shotOriginX, shotOriginY));
+			}
+			
+			
+			
+			//idle animation
+			if (goingRight == false && goingLeft == false)
+			{
+				player.play("stand");
+			}
+			
+			//moves the camera with the player
+			
+			FP.screen.x = -x;
+			FP.screen.y = -y +220;
+			
+			
+			
+			
 			
 			
 			
